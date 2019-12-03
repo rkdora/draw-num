@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>draw-num</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script src="/static/js/app.js"></script>
 </head>
 <body>
   <h1>Draw num</h1>
@@ -13,7 +15,10 @@
     style="border: 1px solid #000000;"></canvas>
   <div>
     <button id="clear-button">全消し</button>
+    <button id="img">送信</button>
   </div>
-  <script src="./static/js/app.js"></script>
+  <div id="answer"></div>
+  <img id="saveImg" src="" width="400px">
+  <img id="inverseImg" src="" width="400px">
 </body>
 </html>

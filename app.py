@@ -1,10 +1,34 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
+import re
+import base64
+import cv2
+import numpy as np
+from datetime import datetime
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET','POST'])
 def index():
-    return render_template('index.html')
+    if request.method == 'POST':
+        ans, now_time = get_img(request.form['img'])
+        return jsonify({'ans': ans, 'now_time': now_time})
+    else:
+        return render_template('index.html')
+
+def get_img(base64_img):
+    now_time = datetime.now().strftime('%s')
+    img_str = re.search(r'base64,(.*)', base64_img).group(1)
+    nparr = np.frombuffer(base64.b64decode(img_str), np.uint8)
+    img_src = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
+    img_resize = cv2.resize(img_src,(28,28))
+    img_name = "static/images/pure/" + now_time + ".jpg"
+    cv2.imwrite(img_name,img_resize)
+    img_inverse = 255 - img_resize
+    img_inverse_name = "static/images/inverse/" + now_time + ".jpg"
+    cv2.imwrite(img_inverse_name,img_inverse)
+    ans = "画像を保存しました"
+
+    return ans, now_time
 
 if __name__ == "__main__":
     app.run()
