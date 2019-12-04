@@ -5,15 +5,19 @@ import cv2
 import numpy as np
 from datetime import datetime
 
-from dnn import predict
+from dnn import model
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET','POST'])
 def index():
     if request.method == 'POST':
-        ans, per, now_time = judge_img(request.form['img'])
-        return jsonify({'ans': ans, 'per': per, 'now_time': now_time})
+        ans, per, adv_ans, adv_per, now_time = judge_img(request.form['img'])
+        return jsonify({'ans': ans,
+                        'per': per,
+                        'adv_ans':adv_ans,
+                        'adv_per':adv_per,
+                        'now_time': now_time})
     else:
         return render_template('index.html')
 
@@ -28,9 +32,15 @@ def judge_img(base64_img):
     img_inverse = 255 - img_resize
     img_inverse_name = "static/images/inverse/" + now_time + ".jpg"
     cv2.imwrite(img_inverse_name,img_inverse)
-    ans, per = predict.predict(img_inverse)
+    ans, per = model.predict(img_inverse/255)
+    img_noise, img_adv = model.generate_adv(img_inverse, ans)
+    img_noise_name = "static/images/noise/" + now_time + ".jpg"
+    cv2.imwrite(img_noise_name, img_noise)
+    img_adv_name = "static/images/adv/" + now_time + ".jpg"
+    cv2.imwrite(img_adv_name, img_adv)
+    adv_ans, adv_per = model.predict(img_adv/255)
 
-    return ans, per, now_time
+    return ans, per, adv_ans, adv_per, now_time
 
 if __name__ == "__main__":
     app.run()

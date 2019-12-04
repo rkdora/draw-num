@@ -12,7 +12,7 @@ window.addEventListener('load', () => {
 
     context.lineCap = 'round';
     context.lineJoin = 'round';
-    context.lineWidth = 20; // 線の太さ
+    context.lineWidth = 25; // 線の太さ
     context.strokeStyle = 'black'; // 線の色
 
     if (lastPosition.x === null || lastPosition.y === null) {
@@ -60,9 +60,12 @@ window.addEventListener('load', () => {
         }
     })
     .done( (data) => {
-        $('#answer').html(data['ans'] + "(" + data['per'] + "%)");
+        $('#answer').html("予測" + data['ans'] + "(" + data['per'] + "%)");
+        $('#advAnswer').html("adversarial example 予測" + data['adv_ans'] + "(" + data['adv_per'] + "%)");
         $("#saveImg").attr("src", "/static/images/pure/" + data['now_time'] + ".jpg");
         $("#inverseImg").attr("src", "/static/images/inverse/" + data['now_time'] + ".jpg");
+        $("#noiseImg").attr("src", "/static/images/noise/" + data['now_time'] + ".jpg");
+        $("#advImg").attr("src", "/static/images/adv/" + data['now_time'] + ".jpg");
         clear();
     });
   }
