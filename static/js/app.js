@@ -60,7 +60,7 @@ window.addEventListener('load', () => {
         }
     })
     .done( (data) => {
-        $('#answer').html(data['ans']);
+        $('#answer').html(data['ans'] + "(" + data['per'] + "%)");
         $("#saveImg").attr("src", "/static/images/pure/" + data['now_time'] + ".jpg");
         $("#inverseImg").attr("src", "/static/images/inverse/" + data['now_time'] + ".jpg");
         clear();

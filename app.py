@@ -5,17 +5,19 @@ import cv2
 import numpy as np
 from datetime import datetime
 
+from dnn import predict
+
 app = Flask(__name__)
 
 @app.route('/', methods=['GET','POST'])
 def index():
     if request.method == 'POST':
-        ans, now_time = get_img(request.form['img'])
-        return jsonify({'ans': ans, 'now_time': now_time})
+        ans, per, now_time = judge_img(request.form['img'])
+        return jsonify({'ans': ans, 'per': per, 'now_time': now_time})
     else:
         return render_template('index.html')
 
-def get_img(base64_img):
+def judge_img(base64_img):
     now_time = datetime.now().strftime('%s')
     img_str = re.search(r'base64,(.*)', base64_img).group(1)
     nparr = np.frombuffer(base64.b64decode(img_str), np.uint8)
@@ -26,9 +28,9 @@ def get_img(base64_img):
     img_inverse = 255 - img_resize
     img_inverse_name = "static/images/inverse/" + now_time + ".jpg"
     cv2.imwrite(img_inverse_name,img_inverse)
-    ans = "画像を保存しました"
+    ans, per = predict.predict(img_inverse)
 
-    return ans, now_time
+    return ans, per, now_time
 
 if __name__ == "__main__":
     app.run()
