@@ -1,1 +1,3 @@
 static/images/
+dnn/__pycache__/
+dnn/common/__pycache__/
