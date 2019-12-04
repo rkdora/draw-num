@@ -25,6 +25,4 @@ def generate_adv(x, label, eps=0.3):
 
     p = eps * np.sign(d)
     adv = (x + p).clip(min=0, max=1)
-    p = np.clip(p * 255, 0, 255).astype(np.uint8)
-    adv = np.clip(adv * 255, 0, 255).astype(np.uint8)
     return p, adv

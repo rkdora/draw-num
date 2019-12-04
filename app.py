@@ -34,12 +34,13 @@ def judge_img(base64_img):
     cv2.imwrite(img_inverse_name,img_inverse)
     ans, per = model.predict(img_inverse/255)
     img_noise, img_adv = model.generate_adv(img_inverse, ans)
+    adv_ans, adv_per = model.predict(img_adv)
+    img_noise = np.clip(img_noise * 255, 0, 255).astype(np.uint8)
+    img_adv = np.clip(img_adv * 255, 0, 255).astype(np.uint8)
     img_noise_name = "static/images/noise/" + now_time + ".jpg"
     cv2.imwrite(img_noise_name, img_noise)
     img_adv_name = "static/images/adv/" + now_time + ".jpg"
     cv2.imwrite(img_adv_name, img_adv)
-    adv_ans, adv_per = model.predict(img_adv/255)
-
     return ans, per, adv_ans, adv_per, now_time
 
 if __name__ == "__main__":
