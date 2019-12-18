@@ -27,13 +27,14 @@ def judge_img(base64_img):
     nparr = np.frombuffer(base64.b64decode(img_str), np.uint8)
     img_src = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
     img_resize = cv2.resize(img_src,(28,28))
+    # img_resize = cv2.GaussianBlur(img_resize,(3,3),0)
     img_name = "static/images/pure/" + now_time + ".jpg"
     cv2.imwrite(img_name,img_resize)
     img_inverse = 255 - img_resize
     img_inverse_name = "static/images/inverse/" + now_time + ".jpg"
     cv2.imwrite(img_inverse_name,img_inverse)
     ans, per = model.predict(img_inverse/255)
-    img_noise, img_adv = model.generate_adv(img_inverse, ans)
+    img_noise, img_adv = model.generate_adv(img_inverse/255, ans)
     adv_ans, adv_per = model.predict(img_adv)
     img_noise = np.clip(img_noise * 255, 0, 255).astype(np.uint8)
     img_adv = np.clip(img_adv * 255, 0, 255).astype(np.uint8)
