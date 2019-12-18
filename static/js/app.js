@@ -12,7 +12,7 @@ window.addEventListener('load', () => {
 
     context.lineCap = 'round';
     context.lineJoin = 'round';
-    context.lineWidth = 25; // 線の太さ
+    context.lineWidth = 7; // 線の太さ
     context.strokeStyle = 'black'; // 線の色
 
     if (lastPosition.x === null || lastPosition.y === null) {
